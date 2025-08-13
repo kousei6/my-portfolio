@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kousei Haruta - My Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            scroll-behavior: smooth;
+        }
+
+        /* ヘロセクション */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #999;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            color: white;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-text h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ナビゲーション */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(-100%);
+        }
+
+        .navbar.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* セクション共通スタイル */
+        .section {
+            padding: 5rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #333;
+            position: relative;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        /* Information セクション */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .info-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .info-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        /* Profile セクション */
+        .profile-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .profile-text {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Skill セクション */
+        .skill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-category {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .skill-category h3 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .skill-bar {
+            margin-bottom: 1rem;
+        }
+
+        .skill-name {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-progress {
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .skill-progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 2s ease-in-out;
+        }
+
+        /* Article & Product セクション */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-image {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-content h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .card-content p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .card-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .card-link:hover {
+            color: #764ba2;
+        }
+
+        /* Contact セクション */
+        .contact-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* フッター */
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-text h2 {
+                font-size: 1.3rem;
+            }
+
+            .profile-image {
+                width: 150px;
+                height: 150px;
+            }
+
+            .profile-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+        }
+
+        /* 背景セクション */
+        .section:nth-child(even) {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <!-- ナビゲーション -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li><a href="#information">Information</a></li>
+                <li><a href="#profile">Profile</a></li>
+                <li><a href="#skill">Skill</a></li>
+                <li><a href="#article">Article</a></li>
+                <li><a href="#product">Product</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ヒーローセクション -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="profile-image">
+                <img src="picture/my01.jpg
+                " alt="Kousei Haruta" style="width:100%;height:100%;object-fit:cover;border-radius:50%;border:none;">
+            </div></div>
+            <div class="hero-text">
+                <h1>Kousei Haruta</h1>
+                <h2>My Portfolio</h2>
+            </div>
+        </div>
+    </section>
+
+    <!-- Information セクション -->
+    <section id="information" class="section">
+        <h2>Information</h2>
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>基本情報</h3>
+                <p>名前: ハルタコウセイ<br>
+                年齢: 21歳<br>
+                所在地: 埼玉県<br>
+                学歴: 東京工科大学 先進情報専攻</p>
+            </div>
+            <div class="info-card">
+                <h3>連絡先</h3>
+                <p>Email: kousei_haruta0703@yahoo.co.jp<br>
+                GitHub: https://github.com/kousei6<br>
+                Streamlit: https://share.streamlit.io/user/kousei6<br>
+                Qiita: https://qiita.com/ouQVZUDx</p>
+            </div>
+            <div class="info-card">
+                <h3>興味分野</h3>
+                <p>情報セキュリティ<br>
+                Webアプリ開発<br>
+                生成AI<br>
+                ノーコード開発</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profile セクション -->
+    <section id="profile" class="section">
+        <h2>Profile</h2>
+        <div class="profile-content">
+            <div class="profile-image" style="margin: 0 auto;">
+                <img src="picture/my02.jpg" alt="Kousei Haruta" style="width:100%;height:100%;object-fit:cover;border-radius:50%;border:none;">
+            </div>
+            <div class="profile-text">
+                <h3>自己紹介</h3>
+                <p>こんにちは、ハルタコウセイです。大学では先進情報を専攻し、主に情報セキュリティに関して学修しています。趣味で、Webアプリケーション開発を行っています。チーム開発の経験も豊富で、コミュニケーションを大切にしながらプロジェクトを成功に導くために注力してきました。新しい技術の習得に積極的で、常に成長し続けることを心がけています。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skill セクション -->
+    <section id="skill" class="section">
+        <h2>Skill</h2>
+        <div class="skill-grid">
+            <div class="skill-category">
+                <h3>フロントエンド</h3>
+                <div class="skill-bar">
+                    <div class="skill-name">
+                        <span>HTML</span>
+                        <span>90%</span>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-bar" style="width: 90%"></div>
+                    </div>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-name">
+                        <span>CSS</span>
+                        <span>80%</span>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-bar" style="width: 80%"></div>
+                    </div>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-name">
+                        <span>JavaScript</span>
+                        <span>70%</span>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-bar" style="width: 70%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="skill-category">
+                <h3>バックエンド</h3>
+                <div class="skill-bar">
+                    <div class="skill-name">
+                        <span>Python</span>
+                        <span>90%</span>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-bar" style="width: 90%"></div>
+                    </div>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-name">
+                        <span>Java</span>
+                        <span>70%</span>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-bar" style="width: 70%"></div>
+                    </div>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-name">
+                        <span>PHP</span>
+                        <span>50%</span>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-bar" style="width: 50%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="skill-category">
+                <h3>その他</h3>
+                <div class="skill-bar">
+                    <div class="skill-name">
+                        <span>野球知識
+                        </span>
+                        <span>100%</span>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-name">
+                        <span>セキュリティ知識</span>
+                        <span>80%</span>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-bar" style="width: 75%"></div>
+                    </div>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-name">
+                        <span>MySQL</span>
+                        <span>70%</span>
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-bar" style="width: 60%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Article セクション -->
+    <section id="article" class="section">
+        <h2>Article</h2>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-image" style="padding:0;">
+                    <a href="https://qiita.com/ouQVZUDx/items/d608b024ae075a2920ba" target="_blank" style="display:block;width:100%;height:100%;"></a>
+                        <img src="picture/qiita01.jpg" alt="Qiitaサムネイル" style="width:100%;height:200px;object-fit:cover;display:block;">
+                    </a>
+                </div>
+                <div class="card-content">
+                    <h3>
+                        <a href="https://qiita.com/ouQVZUDx/items/d608b024ae075a2920ba" target="_blank" class="card-link" style="color:inherit;text-decoration:none;">
+                            Python初心者から中級者へ！
+                        </a>
+                    </h3>
+                    <p>Python初心者から中級者へ！実際に使って便利だったライブラリ5選について紹介した記事です。</p>
+                    <a href="https://qiita.com/ouQVZUDx/items/d608b024ae075a2920ba" target="_blank" class="card-link">Qiitaで記事を読む →</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-image" style="padding:0;">
+                    <a href="https://qiita.com/ouQVZUDx/items/9ce7e1f528d3a0e61907" target="_blank" style="display:block;width:100%;height:100%;"></a>
+                        <img src="picture/qiita02.jpg" alt="Qiitaサムネイル" style="width:100%;height:200px;object-fit:cover;display:block;">
+                    </a>
+                </div>
+                <div class="card-content">
+                    <h3>
+                        <a href="https://qiita.com/ouQVZUDx/items/9ce7e1f528d3a0e61907" target="_blank" class="card-link" style="color:inherit;text-decoration:none;">
+                            生成AIツールを使い倒している件について
+                        </a>
+                    </h3>
+                    <p>DeNA南場会長が生成AIツールを使い倒している件についてまとめた記事です。</p>
+                    <a href="https://qiita.com/ouQVZUDx/items/9ce7e1f528d3a0e61907" target="_blank" class="card-link">Qiitaで記事を読む →</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-image" style="padding:0;">
+                    <a href="https://qiita.com/ouQVZUDx/items/8340cfb4af1e1cbc8f97" target="_blank" style="display:block;width:100%;height:100%;"></a>
+                        <img src="picture/qiita03.jpg" alt="Qiitaサムネイル" style="width:100%;height:200px;object-fit:cover;display:block;">
+                    </a>
+                </div>
+                <div class="card-content">
+                    <h3>
+                        <a href="https://qiita.com/ouQVZUDx/items/8340cfb4af1e1cbc8f97" target="_blank" class="card-link" style="color:inherit;text-decoration:none;">
+                            あなたのコードはなぜ読みにくい？
+                        </a>
+                    </h3>
+                    <p>あなたのコードはなぜ読みにくい？改善するための5つのヒントについて解説した記事です。</p>
+                    <a href="https://qiita.com/ouQVZUDx/items/8340cfb4af1e1cbc8f97" target="_blank" class="card-link">Qiitaで記事を読む →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product セクション -->
+    <section id="product" class="section">
+        <h2>Product</h2>
+        <div class="card-grid">
+            <div class="card">
+            <div class="card-image" style="padding: 0;">
+                <img src="picture/product01.png" alt="Product 1" style="width:100%;height:200px;object-fit:cover;">
+            </div>
+            <div class="card-content">
+                <h3>
+                    <a href="https://drive.google.com/file/d/1m-ZzBKLIDipHOla0BtgmoVSJTvDprPVy/view?t=16" target="_blank" class="card-link" style="color:inherit;text-decoration:none;">
+                        "ハッキング"
+                    </a>
+                </h3>
+                <p>チーム開発で、MySQL・PHP・Python（CGI）を用いた絵画通販サイトを作成し、商品の閲覧・購入機能を実装しました。加えて、セキュリティ検証としてハッキングを実施しました。</p>
+                <a href="https://drive.google.com/file/d/1m-ZzBKLIDipHOla0BtgmoVSJTvDprPVy/view?t=16" target="_blank" class="card-link">デモを見る →</a>
+            </div>
+            </div>
+            <div class="card">
+                <div class="card-image" style="padding: 0;">
+                    <img src="picture/product02.png" alt="Product 2" style="width:100%;height:200px;object-fit:cover;">
+                </div>
+                <div class="card-content">
+                    <h3>
+                        <a href="https://baseballanalysis-6.streamlit.app/" target="_blank" class="card-link" style="color:inherit;text-decoration:none;">
+                            野球選手成績分析アプリ
+                        </a>
+                    </h3>
+                    <p>Python×Streamlitで作成したWebアプリケーション。日本のプロ野球選手の年度別成績データを誰でも理解・分析できるように開発を行いました。</p>
+                    <a href="https://baseballanalysis-6.streamlit.app/" target="_blank" class="card-link">アプリを見る →</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-image" style="padding: 0;">
+                    <img src="picture/product03.png" alt="Product 3" style="width:100%;height:200px;object-fit:cover;">
+                </div>
+                <div class="card-content">
+                    <h3>
+                        <a href="https://drive.google.com/file/d/1MtGI6ynt2CMOAtjBK6A2XwIQWOF9YhYz/view" target="_blank" class="card-link" style="color:inherit;text-decoration:none;">
+                            Pacmanゲーム開発
+                        </a>
+                    </h3>
+                    <p>Python×Pygameで作成したパックマンゲーム。GitHubのリポジトリを利用し、ブランチ戦略やプルリクエストを活用することで、スムーズな開発を実現しました。</p>
+                    <a href="https://drive.google.com/file/d/1MtGI6ynt2CMOAtjBK6A2XwIQWOF9YhYz/view" target="_blank" class="card-link">動画を見る →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact セクション -->
+    <section id="contact" class="section">
+        <h2>Contact</h2>
+        <div class="contact-container">
+            <form class="contact-form">
+                <div class="form-group">
+                    <label for="name">お名前</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">メールアドレス</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">件名</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">メッセージ</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">送信する</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <p>&copy; 2025 Kousei Haruta. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // スクロール時のナビゲーション表示
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('show');
+            } else {
+                navbar.classList.remove('show');
+            }
+        });
+
+        // スムーススクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // フォーム送信処理
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('メッセージが送信されました！（これはデモです）');
+        });
+
+        // スキルバーのアニメーション
+        function animateSkillBars() {
+            const skillBars = document.querySelectorAll('.skill-progress-bar');
+            skillBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100);
+            });
+        }
+
+        // スキルセクションが表示されたらアニメーション開始
+        const skillSection = document.getElementById('skill');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateSkillBars();
+                }
+            });
+        });
+
+        observer.observe(skillSection);
+    </script>
+</body>
+</html>
